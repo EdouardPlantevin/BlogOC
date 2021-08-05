@@ -38,7 +38,7 @@ class Form
             }
             else
             {
-                $attrs .= " $attribute='$value'";
+                $attrs .= " $attribute=\"$value\"";
             }
         }
         return $attrs;
@@ -82,9 +82,9 @@ class Form
 
     public function addTextarea(string $name, string $value = '', array $attributes = []): self
     {
-        $this->formCode .= "<textarea name='$name'>";
+        $this->formCode .= "<textarea name='$name'";
 
-        $this->formCode .= $attributes ? $this->addAttributes($attributes) : '';
+        $this->formCode .= $attributes ? $this->addAttributes($attributes) : '>';
 
         $this->formCode .= ">$value</textarea>";
 
@@ -99,7 +99,7 @@ class Form
 
         foreach($options as $value => $text)
         {
-            $this->formCode .= "<option value='$value'>$text</option>";
+            $this->formCode .= "<option value=\"$value\">$text</option>";
         }
 
         $this->formCode .= "</select>";

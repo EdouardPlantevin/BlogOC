@@ -12,6 +12,7 @@ class AnnoncesModel extends Model
     protected $description;
     protected $createdAt;
     protected $actif;
+    protected $users_id;
 
     public function __construct()
     {
@@ -73,4 +74,14 @@ class AnnoncesModel extends Model
         return $this;
     }
 
+    public function getUserId(): int
+    {
+        return $this->users_id;
+    }
+
+    public function setUserId(int $users_id)
+    {
+        $this->users_id = $users_id;
+        return $this;
+    }
 }
