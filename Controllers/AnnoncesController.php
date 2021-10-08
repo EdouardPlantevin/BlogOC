@@ -73,7 +73,7 @@ class AnnoncesController extends Controller
                     'id' => 'image', 
                     'class' => 'form-control'
                 ])
-                ->addBtn('submit', 'Ajouter', ['class' => 'btn btn-primary'])
+                ->addBtn('submit', 'Créer', ['class' => 'btn btn-primary'])
                 ->endForm();
 
             $this->render('annonces/ajouter', [
@@ -106,8 +106,12 @@ class AnnoncesController extends Controller
 
             if($annonce->users_id != $_SESSION['user']['id'])
             {
-                $_SESSION['error'] = 'Vous n\'avez pas accès à cette page';
-                header('Location: ' . PATH . 'annonces');
+                if(!in_array('ROLE_ADMIN', $_SESSION['user']['roles']))
+                {
+                    $_SESSION['error'] = 'Vous n\'avez pas accès à cette page';
+                    header('Location: ' . PATH . 'annonces');
+                    exit;
+                }
             }
 
             if(Form::validate($_POST, ['title', 'description']))

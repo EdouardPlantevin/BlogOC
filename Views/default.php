@@ -6,27 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titre</title>
 
+
+    <link rel="stylesheet" href="../public/assets/styles/front/app.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="<?= PATH ?>">Mes annonces</a>
+            <a class="navbar-brand" href="<?= PATH ?>">Accueil</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                        <a class="nav-link" href="<?= PATH ?>articles">Liste des articles</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= PATH ?>annonces">Liste des annonces</a>
+                        <a class="nav-link" href="<?= PATH ?>contact">Contact</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <?php if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])): ?>
+                        <?php if(isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])): ?>
+                            <li class="nav-item">
+                                <a href="<?= PATH ?>admin" class="nav-link">Admin</a>
+                            </li>
+                        <?php endif; ?>                       
                         <li class="nav-item">
                             <a class="nav-link" href="<?= PATH ?>users/profile">Profil</a>
                         </li>

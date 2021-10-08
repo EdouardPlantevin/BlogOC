@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 abstract class Controller 
 {
-    public function render(string $file, array $data = [])
+    public function render(string $file, array $data = [], string $template = 'default')
     {
         extract($data);
 
@@ -14,7 +14,6 @@ abstract class Controller
 
         $body = ob_get_clean();
 
-        require_once ROOT . '/Views/default.php';
-
+        require_once ROOT . '/Views/' . $template . '.php';
     }
-}
+} 

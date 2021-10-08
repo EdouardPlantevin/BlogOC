@@ -129,4 +129,10 @@ class Model extends Db
             return $this->db->query($sql);
         }
     }
+
+    public function getCount()
+    {
+        $query = $this->request('SELECT * FROM ' . $this->table);
+        return $query->rowCount();
+    }
 }

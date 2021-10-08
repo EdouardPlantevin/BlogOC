@@ -1,0 +1,14 @@
+.login-container {
+    width: 40%;
+    margin: 0 auto;
+}
+
+input {
+    margin-bottom: 20px;
+}
+
+.form-card {
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    padding: 20px;
+    border-radius: .25rem;
+}
