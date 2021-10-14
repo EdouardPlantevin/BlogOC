@@ -1,3 +1,7 @@
+Le site fonctionne à partir du dossier "public"
+
+
+
 Description du besoin
 Le projet est donc de développer votre blog professionnel. Ce site web se décompose en deux grands groupes de pages :
 

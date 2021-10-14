@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titre</title>
 
-
-    <link rel="stylesheet" href="../public/assets/styles/front/app.css">
+    <script src="https://kit.fontawesome.com/27a02ce989.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="../public/assets/styles/app.css" type="text/css">
 
 </head>
 <body>
@@ -21,22 +21,25 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= PATH ?>articles">Liste des articles</a>
+                        <a class="nav-link" href="<?= PATH ?>liste-des-articles">Liste des articles</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= PATH ?>contact">Contact</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
+                    <a href="https://github.com/EdouardPlantevin/" target="_blank" class="d-flex align-items-center btn btn-dark">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/edouard-plantevin/" target="_blank" class="d-flex align-items-center mr-2 btn btn-dark">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
                     <?php if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])): ?>
                         <?php if(isset($_SESSION['user']['roles']) && in_array('ROLE_ADMIN', $_SESSION['user']['roles'])): ?>
                             <li class="nav-item">
                                 <a href="<?= PATH ?>admin" class="nav-link">Admin</a>
                             </li>
-                        <?php endif; ?>                       
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= PATH ?>users/profile">Profil</a>
-                        </li>
+                        <?php endif; ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= PATH ?>users/logout">Déconnexion</a>
                         </li>

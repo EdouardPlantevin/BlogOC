@@ -6,6 +6,7 @@ use DateTime;
 use App\Core\Form;
 use App\Models\ArticleModel;
 use App\Models\AnnoncesModel;
+use App\Models\CommentModel;
 use App\Models\ContactModel;
 use App\Models\UsersModel;
 
@@ -87,11 +88,16 @@ class AdminController extends Controller
             {
                 $title = strip_tags($_POST['title']);
                 $content = strip_tags($_POST['content']);
+                $shortDescription = strip_tags($_POST['short_description']);
+
+                move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
 
                 $article = new ArticleModel;
                 $article->setTitle($title)
                         ->setContent($content)
                         ->setAuthorId($_SESSION['user']['id'])
+                        ->setShortDescription($shortDescription)
+                        ->setImage($_FILES['image']['name'])
                         ->setActive(true);
 
                 $article->create();
@@ -105,11 +111,14 @@ class AdminController extends Controller
                 $_SESSION['error'] =  !empty($_POST) ? "Le formulaire est incomplet" : '';
                 $title = isset($_POST['title']) ? strip_tags($_POST['title']) : '';
                 $content = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
+                $shortDescription = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
             }
 
             $form = new Form();
 
-            $form->startForm()
+            $form->startForm('post', '#', [
+                "enctype" => "multipart/form-data"
+            ])
             ->addLabel('title', 'Titre de l\'article')
             ->addInput('text', 'title', [
                 'id' => 'title', 
@@ -120,6 +129,17 @@ class AdminController extends Controller
             ->addTextarea('content', $content, [
                 'id' => 'content', 
                 'class' => 'form-control'
+            ])
+            ->addLabel('short_description', 'Description courte de l\'article')
+            ->addTextarea('short_description', $shortDescription, [
+                'id' => 'short_description', 
+                'class' => 'form-control'
+            ])
+            ->addLabel('image', 'Image')
+            ->addInput('file', 'image', [
+                'id' => 'image',
+                'class' => 'form-control',
+                'accept' => 'image/*'
             ])
             ->addBtn('submit', 'Créer', ['class' => 'btn btn-primary mt-2'])
             ->endForm();
@@ -160,10 +180,15 @@ class AdminController extends Controller
             {
                 $title = strip_tags($_POST['title']);
                 $content = strip_tags($_POST['content']);
+                $shortDescription = strip_tags($_POST['short_description']);
+
+                move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
 
                 $articleEdit = new ArticleModel;
                 $articleEdit->setId($article->id)
                             ->setTitle($title)
+                            ->setShortDescription($shortDescription)
+                            ->setImage($_FILES['image']['name'])
                             ->setContent($content);
 
                 $articleEdit->update();
@@ -175,24 +200,37 @@ class AdminController extends Controller
 
             $form = new Form;
 
-            $form->startForm()
-                ->addLabel('title', 'Titre de l\'article')
-                ->addInput('text', 'title', [
-                    'id' => 'title', 
-                    'class' => 'form-control',
-                    'value' => $article->title,
-                ])
-                ->addLabel('content', 'Texte de l\'article')
-                ->addTextarea('content', $article->content, [
-                    'id' => 'content', 
-                    'class' => 'form-control'
-                ])
-                ->addBtn('submit', 'Modifier', ['class' => 'btn btn-primary mt-2'])
-                ->endForm();
+            $form->startForm('post', '#', [
+                "enctype" => "multipart/form-data"
+            ])
+            ->addLabel('title', 'Titre de l\'article')
+            ->addInput('text', 'title', [
+                'id' => 'title', 
+                'class' => 'form-control',
+                'value' => $article->title,
+            ])
+            ->addLabel('content', 'Texte de l\'article')
+            ->addTextarea('content', $article->content, [
+                'id' => 'content', 
+                'class' => 'form-control'
+            ])
+            ->addLabel('short_description', 'Description courte de l\'article')
+            ->addTextarea('short_description', $article->short_description, [
+                'id' => 'short_description', 
+                'class' => 'form-control'
+            ])
+            ->addLabel('image', 'Image')
+            ->addInput('file', 'image', [
+                'id' => 'image',
+                'class' => 'form-control',
+                'accept' => 'image/*'
+            ])
+            ->addBtn('submit', 'Modifier', ['class' => 'btn btn-primary mt-2'])
+            ->endForm();
 
-                $this->render('admin/articles/edit-article', [
-                    'form' => $form->create()
-                ], 'admin');
+            $this->render('admin/articles/edit-article', [
+                'form' => $form->create()
+            ], 'admin');
 
         }
         else 
@@ -241,6 +279,53 @@ class AdminController extends Controller
             header('Location: ' . $_SERVER['HTTP_REFERER']);
         }
 
+    }
+
+    //Comments
+
+    public function comments()
+    {
+        $commentModel = new CommentModel;
+
+        $comments = $commentModel->findBy(['active' => 0]);
+
+        $this->render('admin/comments/index', [
+            'comments' => $comments
+        ], 'admin');
+
+    }
+
+    public function activeComment(int $id)
+    {
+        if($this->isAdmin())
+        {
+            $commentModel = new CommentModel;
+            $comment = $commentModel->find($id);
+
+            $commentEdit = new CommentModel;
+
+            $commentEdit->setId($comment->id)
+                        ->setActive(1);
+            $commentEdit->update();
+
+            $this->render('admin/comments/index', [
+                'comments' => $commentModel->findBy(['active' => 0])
+            ], 'admin');
+        }   
+    }
+
+
+    public function deleteComment(int $id)
+    {
+        if($this->isAdmin())
+        {
+            $comment = new CommentModel;
+
+            $comment->delete($id);
+
+            $_SESSION['message'] = "Le commentaire a été supprimé avec succès";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+        }
     }
     
 

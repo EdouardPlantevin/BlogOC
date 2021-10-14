@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="../../public/assets/styles/front/login.css">
-
 
 <div class="login-container">
     <h1>Connexion</h1>

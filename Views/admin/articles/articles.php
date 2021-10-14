@@ -17,7 +17,9 @@
                     <tr>
                         <td><?= $article->id ?></td>
                         <td><?= $article->title ?></td>
-                        <td><img src="https://kinsta.com/wp-content/uploads/2018/05/what-is-php-3-1.png" class="img-admin" alt="..."></td>
+                        <td>
+                            <img src="<?= PATH ?>assets/images/<?= $article->image ?>" class="img-admin" alt="<?= $article->title ?>" />
+                        </td>
                         <td>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" data-id="<?= $article->id ?>" type="checkbox" id="<?= $article->id ?>" <?= $article->active ? 'checked' : '' ?>>

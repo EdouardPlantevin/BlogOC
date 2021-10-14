@@ -1,4 +1,3 @@
-console.log('ça marche ?')
 
 window.onload = () => {
     let buttons = document.querySelectorAll('.form-check-input')

@@ -2,9 +2,11 @@ RewriteEngine On
 
 RewriteRule ^admin/liste-des-articles$ /BDDPHP/public/admin/articles [L,QSA]
 
+RewriteRule ^admin/liste-des-commentaires$ /BDDPHP/public/admin/comments [L,QSA]
+
 RewriteRule ^admin/liste-des-contacts$ /BDDPHP/public/admin/contacts [L,QSA]
 
-RewriteRule ^admin/liste-des-articles/edition$ /BDDPHP/public/admin/editArticle/1 [L,QSA]
+RewriteRule ^admin/liste-des-articles/edition/([0-9]*)$ /BDDPHP/public/admin/editArticle/$1 [L,QSA]
 
 RewriteRule ^liste-des-articles$ /BDDPHP/public/articles [L,QSA]
 

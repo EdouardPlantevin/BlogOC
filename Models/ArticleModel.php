@@ -7,16 +7,17 @@ class ArticleModel extends Model
     protected $id;
     protected $title;
     protected $content;
+    protected $short_description;
     protected $created_at;
     protected $updated_at;
     protected $author_id;
     protected $active;
+    protected $image;
 
     public function __construct()
     {
         $this->table = 'articles';
     }
-
 
     //GETTER
     public function getId()
@@ -32,6 +33,11 @@ class ArticleModel extends Model
     public function getContent()
     {
         return $this->content;
+    }
+
+    public function getShortDescription()
+    {
+        return $this->short_description;
     }
 
     public function getCreatedAt()
@@ -55,6 +61,11 @@ class ArticleModel extends Model
         return $this;
     }
 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
     //SETTER
     public function setTitle($title)
     {
@@ -65,6 +76,12 @@ class ArticleModel extends Model
     public function setContent($content)
     {
         $this->content = $content;
+        return $this;
+    }
+
+    public function setShortDescription($shortDescription)
+    {
+        $this->short_description = $shortDescription;
         return $this;
     }
 
@@ -95,6 +112,20 @@ class ArticleModel extends Model
     {
         $this->active = $active;
         return $this;
+    }
+
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    //Request
+
+    public function findAllOrder()
+    {
+        $query = $this->request('SELECT * FROM ' . $this->table . ' WHERE active = 1 ORDER BY updated_at DESC');
+        return $query->fetchAll();
     }
 
 }

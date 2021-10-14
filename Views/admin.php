@@ -7,41 +7,10 @@
     <title>Titre</title>
     <script src="https://kit.fontawesome.com/27a02ce989.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="/BDDPHP/public/assets/styles/back/back.css">
+    <link rel="stylesheet" href="/BDDPHP/public/assets/styles/back.css">
 
 </head>
 <body>
-    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= PATH ?>">Accueil du site</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= PATH ?>admin">Accueil de l'admin</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
-                    <?php if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= PATH ?>users/profile">Profil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= PATH ?>users/logout">Déconnexion</a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="<?= PATH ?>users/login">Connexion</a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </nav> -->
 
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; height: 100vh">
@@ -59,6 +28,11 @@
           <li>
             <a href="<?= PATH ?>admin/liste-des-articles" class="nav-link text-white">
               Articles
+            </a>
+          </li>
+          <li>
+            <a href="<?= PATH ?>admin/liste-des-commentaires" class="nav-link text-white">
+              Commentaires
             </a>
           </li>
           <li>

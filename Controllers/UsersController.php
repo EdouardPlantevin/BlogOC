@@ -19,7 +19,7 @@ class UsersController extends Controller
             if(!$userArray)
             {
                 $_SESSION['error'] = "L'adresse e-mail et/ou le mot de passe est incorrect";
-                header('Location: ' . PATH . '/users/login');
+                header('Location: ' . PATH . 'users/login');
                 exit;
             }
 
@@ -34,7 +34,7 @@ class UsersController extends Controller
             else 
             {
                 $_SESSION['error'] = "L'adresse e-mail et/ou le mot de passe est incorrect";
-                header('Location: ' . PATH . '/users/login');
+                header('Location: ' . PATH . 'users/login');
                 exit;
             }
         }
@@ -60,13 +60,17 @@ class UsersController extends Controller
         if(Form::validate($_POST, ['email', 'password']))
         {
             $email = strip_tags($_POST['email']);
+            $fullname = strip_tags($_POST['fullname']);
             $password = password_hash($_POST['password'], PASSWORD_ARGON2I);
 
             $user = new UsersModel;
             $user->setEmail($email)
+                ->setFullname($fullname)
                 ->setPassword($password);
 
             $user->create();
+
+            header('Location: ' . PATH . 'users/login');
         }
 
         $form = new Form();
@@ -75,6 +79,8 @@ class UsersController extends Controller
             ->addLabel('email', 'E-mail')
             ->addInput('email', 'email', ['class' => 'form-control', 'id' => 'email'])
             ->addLabel('password', 'Mot de passe')
+            ->addLabel('fullname', 'Nom Prénon')
+            ->addInput('fullname', 'fullname', ['class' => 'form-control', 'id' => 'fullname'])
             ->addInput('password', 'password', ['class' => 'form-control', 'id' => 'password'])
             ->addBtn('submit', 'M\'inscrire', ['class' => 'btn btn-primary'])
             ->endForm();

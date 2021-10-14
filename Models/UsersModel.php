@@ -6,6 +6,7 @@ class UsersModel extends Model
 {
     protected $id;
     protected $email;
+    protected $fullname;
     protected $password;
     protected $roles;
 
@@ -24,6 +25,7 @@ class UsersModel extends Model
         $_SESSION['user'] = [
             'id' => $this->id,
             'email' => $this->email,
+            'fullname' => $this->fullname,
             'roles' => $this->roles
         ];
     }
@@ -47,6 +49,17 @@ class UsersModel extends Model
     public function setEmail(string $email)
     {
         $this->email = $email;
+        return $this;
+    }
+
+    public function getFullname()
+    {
+        return $this->fullname;
+    }
+
+    public function setFullname($fullname)
+    {
+        $this->fullname = $fullname;
         return $this;
     }
 
