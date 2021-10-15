@@ -68,7 +68,7 @@
         <h2 class="other-article-detail">Nos autres articles</h2>
         <?php foreach($articles as $otherArticle): ?>
             <?php if($otherArticle->id != $article->id): ?>
-            <a href="<?= PATH ?>articles/show/<?= $otherArticle->id ?>"" class="link-article btn">
+            <a href="<?= PATH ?>articles/detail/<?= $otherArticle->id ?>"" class="link-article btn">
                 <div class="card">
                 <img src="<?= PATH ?>assets/images/<?= $otherArticle->image ?>" class="card-img-top" alt="<?= $otherArticle->title ?>">
                     <div class="card-body">

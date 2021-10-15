@@ -2,7 +2,7 @@
 <h1>Liste des articles</h1>
 <div class="articles-container">
 <?php foreach($articles as $article): ?>
-    <a href="<?= PATH ?>articles/show/<?= $article->id ?>"" class="link-article">
+    <a href="<?= PATH ?>articles/detail/<?= $article->id ?>"" class="link-article">
         <div class="card h-100">
         <img src="<?= PATH ?>assets/images/<?= $article->image ?>" class="card-img-top" alt="<?= $article->title ?>">
             <div class="card-body">

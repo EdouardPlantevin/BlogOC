@@ -19,7 +19,7 @@
     <h3 class="main-title">Derniers articles</h3>
     <div class="grid-articles">
         <?php foreach ($articles as $article): ?>
-          <a href="<?= PATH ?>articles/show/<?= $article->id ?>"" class="link-article">
+          <a href="<?= PATH ?>articles/detail/<?= $article->id ?>"" class="link-article">
               <div class="card">
                   <img src="<?= PATH ?>assets/images/<?= $article->image ?>" class="card-img-top" alt="<?= $article->title ?>">
                   <div class="card-body">

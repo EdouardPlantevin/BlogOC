@@ -10,6 +10,8 @@ RewriteRule ^admin/liste-des-articles/edition/([0-9]*)$ /BDDPHP/public/admin/edi
 
 RewriteRule ^liste-des-articles$ /BDDPHP/public/articles [L,QSA]
 
+RewriteRule ^articles/detail/([0-9]*)$ /BDDPHP/public/articles/show/$1 [L,QSA]
+
 RewriteRule ^edouard-plantevin$ /BDDPHP/public/ [L,QSA]
 
 RewriteRule ^([a-zA-Z0-9\-\_\/]*)$ index.php?p=$1
