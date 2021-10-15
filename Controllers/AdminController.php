@@ -81,163 +81,168 @@ class AdminController extends Controller
 
     public function addArticle()
     {
-        if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) 
-        {
-
-            if(Form::validate($_POST, ['title', 'content']))
+        if($this->isAdmin()) {
+            if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) 
             {
-                $title = strip_tags($_POST['title']);
-                $content = strip_tags($_POST['content']);
-                $shortDescription = strip_tags($_POST['short_description']);
-
-                move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
-
-                $article = new ArticleModel;
-                $article->setTitle($title)
-                        ->setContent($content)
-                        ->setAuthorId($_SESSION['user']['id'])
-                        ->setShortDescription($shortDescription)
-                        ->setImage($_FILES['image']['name'])
-                        ->setActive(true);
-
-                $article->create();
-                
-                $_SESSION['message'] = "Votre article a été enregistrée avec succès";
-                header('Location: ' . PATH);
-                exit;
+    
+                if(Form::validate($_POST, ['title', 'content']))
+                {
+                    $title = strip_tags($_POST['title']);
+                    $content = strip_tags($_POST['content']);
+                    $shortDescription = strip_tags($_POST['short_description']);
+    
+                    move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
+    
+                    $article = new ArticleModel;
+                    $article->setTitle($title)
+                            ->setContent($content)
+                            ->setAuthorId($_SESSION['user']['id'])
+                            ->setShortDescription($shortDescription)
+                            ->setImage($_FILES['image']['name'])
+                            ->setActive(true);
+    
+                    $article->create();
+                    
+                    $_SESSION['message'] = "Votre article a été enregistrée avec succès";
+                    header('Location: ' . PATH);
+                    exit;
+                }
+                else 
+                {
+                    $_SESSION['error'] =  !empty($_POST) ? "Le formulaire est incomplet" : '';
+                    $title = isset($_POST['title']) ? strip_tags($_POST['title']) : '';
+                    $content = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
+                    $shortDescription = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
+                }
+    
+                $form = new Form();
+    
+                $form->startForm('post', '#', [
+                    "enctype" => "multipart/form-data"
+                ])
+                ->addLabel('title', 'Titre de l\'article')
+                ->addInput('text', 'title', [
+                    'id' => 'title', 
+                    'class' => 'form-control',
+                    'value' => $title,
+                ])
+                ->addLabel('content', 'Texte de l\'article')
+                ->addTextarea('content', $content, [
+                    'id' => 'content', 
+                    'class' => 'form-control'
+                ])
+                ->addLabel('short_description', 'Description courte de l\'article')
+                ->addTextarea('short_description', $shortDescription, [
+                    'id' => 'short_description', 
+                    'class' => 'form-control'
+                ])
+                ->addLabel('image', 'Image')
+                ->addInput('file', 'image', [
+                    'id' => 'image',
+                    'class' => 'form-control',
+                    'accept' => 'image/*'
+                ])
+                ->addBtn('submit', 'Créer', ['class' => 'btn btn-primary mt-2'])
+                ->endForm();
+    
+                $this->render('admin/articles/add-article', [
+                    'form' => $form->create()
+                ], 'admin');
             }
-            else 
-            {
-                $_SESSION['error'] =  !empty($_POST) ? "Le formulaire est incomplet" : '';
-                $title = isset($_POST['title']) ? strip_tags($_POST['title']) : '';
-                $content = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
-                $shortDescription = isset($_POST['content']) ? strip_tags($_POST['content']) : '';
-            }
-
-            $form = new Form();
-
-            $form->startForm('post', '#', [
-                "enctype" => "multipart/form-data"
-            ])
-            ->addLabel('title', 'Titre de l\'article')
-            ->addInput('text', 'title', [
-                'id' => 'title', 
-                'class' => 'form-control',
-                'value' => $title,
-            ])
-            ->addLabel('content', 'Texte de l\'article')
-            ->addTextarea('content', $content, [
-                'id' => 'content', 
-                'class' => 'form-control'
-            ])
-            ->addLabel('short_description', 'Description courte de l\'article')
-            ->addTextarea('short_description', $shortDescription, [
-                'id' => 'short_description', 
-                'class' => 'form-control'
-            ])
-            ->addLabel('image', 'Image')
-            ->addInput('file', 'image', [
-                'id' => 'image',
-                'class' => 'form-control',
-                'accept' => 'image/*'
-            ])
-            ->addBtn('submit', 'Créer', ['class' => 'btn btn-primary mt-2'])
-            ->endForm();
-
-            $this->render('admin/articles/add-article', [
-                'form' => $form->create()
-            ], 'admin');
         }
     }
 
     public function editArticle(int $id)
     {
-        if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) 
-        {
-
-            $articleModel = new ArticleModel;
-            $article = $articleModel->find($id);
-
-            if(!$article)
+        if($this->isAdmin()) {
+            if(isset($_SESSION['user']) && !empty($_SESSION['user']['id'])) 
             {
-                http_response_code(404);
-                $_SESSION['error'] = "L'article recherchée n'existe pas";
-                header('Location: ' . PATH . 'articles');
-                exit;
-            }
-
-            if($article->author_id != $_SESSION['user']['id'])
-            {
-                if(!in_array('ROLE_ADMIN', $_SESSION['user']['roles']))
+    
+                $articleModel = new ArticleModel;
+                $article = $articleModel->find($id);
+    
+                if(!$article)
                 {
-                    $_SESSION['error'] = 'Vous n\'avez pas accès à cette page';
+                    http_response_code(404);
+                    $_SESSION['error'] = "L'article recherchée n'existe pas";
                     header('Location: ' . PATH . 'articles');
                     exit;
                 }
+    
+                if($article->author_id != $_SESSION['user']['id'])
+                {
+                    if(!in_array('ROLE_ADMIN', $_SESSION['user']['roles']))
+                    {
+                        $_SESSION['error'] = 'Vous n\'avez pas accès à cette page';
+                        header('Location: ' . PATH . 'articles');
+                        exit;
+                    }
+                }
+    
+                if(Form::validate($_POST, ['title', 'content']))
+                {
+                    $title = strip_tags($_POST['title']);
+                    $content = strip_tags($_POST['content']);
+                    $shortDescription = strip_tags($_POST['short_description']);
+    
+                    move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
+    
+                    $articleEdit = new ArticleModel;
+                    $articleEdit->setId($article->id)
+                                ->setTitle($title)
+                                ->setShortDescription($shortDescription)
+                                ->setImage($_FILES['image']['name'])
+                                ->setContent($content);
+    
+                    $articleEdit->update();
+    
+                    $_SESSION['message'] = "Votre article a été modifiée avec succès";
+                    header('Location: ' . PATH);
+                    exit;
+                }
+    
+                $form = new Form;
+    
+                $form->startForm('post', '#', [
+                    "enctype" => "multipart/form-data"
+                ])
+                ->addLabel('title', 'Titre de l\'article')
+                ->addInput('text', 'title', [
+                    'id' => 'title', 
+                    'class' => 'form-control',
+                    'value' => $article->title,
+                ])
+                ->addLabel('content', 'Texte de l\'article')
+                ->addTextarea('content', $article->content, [
+                    'id' => 'content', 
+                    'class' => 'form-control'
+                ])
+                ->addLabel('short_description', 'Description courte de l\'article')
+                ->addTextarea('short_description', $article->short_description, [
+                    'id' => 'short_description', 
+                    'class' => 'form-control'
+                ])
+                ->addLabel('image', 'Image')
+                ->addInput('file', 'image', [
+                    'id' => 'image',
+                    'class' => 'form-control',
+                    'accept' => 'image/*'
+                ])
+                ->addBtn('submit', 'Modifier', ['class' => 'btn btn-primary mt-2'])
+                ->endForm();
+    
+                $this->render('admin/articles/edit-article', [
+                    'form' => $form->create()
+                ], 'admin');
+    
             }
-
-            if(Form::validate($_POST, ['title', 'content']))
+            else 
             {
-                $title = strip_tags($_POST['title']);
-                $content = strip_tags($_POST['content']);
-                $shortDescription = strip_tags($_POST['short_description']);
-
-                move_uploaded_file($_FILES["image"]["tmp_name"], ROOT . "/public/assets/images/" . $_FILES["image"]["name"]);
-
-                $articleEdit = new ArticleModel;
-                $articleEdit->setId($article->id)
-                            ->setTitle($title)
-                            ->setShortDescription($shortDescription)
-                            ->setImage($_FILES['image']['name'])
-                            ->setContent($content);
-
-                $articleEdit->update();
-
-                $_SESSION['message'] = "Votre article a été modifiée avec succès";
-                header('Location: ' . PATH);
+                $_SESSION['error'] = "Vous devez être connecté(e) pour accéder à cette page";
+                header('Location: ' . PATH . 'users/login');
                 exit;
             }
 
-            $form = new Form;
-
-            $form->startForm('post', '#', [
-                "enctype" => "multipart/form-data"
-            ])
-            ->addLabel('title', 'Titre de l\'article')
-            ->addInput('text', 'title', [
-                'id' => 'title', 
-                'class' => 'form-control',
-                'value' => $article->title,
-            ])
-            ->addLabel('content', 'Texte de l\'article')
-            ->addTextarea('content', $article->content, [
-                'id' => 'content', 
-                'class' => 'form-control'
-            ])
-            ->addLabel('short_description', 'Description courte de l\'article')
-            ->addTextarea('short_description', $article->short_description, [
-                'id' => 'short_description', 
-                'class' => 'form-control'
-            ])
-            ->addLabel('image', 'Image')
-            ->addInput('file', 'image', [
-                'id' => 'image',
-                'class' => 'form-control',
-                'accept' => 'image/*'
-            ])
-            ->addBtn('submit', 'Modifier', ['class' => 'btn btn-primary mt-2'])
-            ->endForm();
-
-            $this->render('admin/articles/edit-article', [
-                'form' => $form->create()
-            ], 'admin');
-
-        }
-        else 
-        {
-            $_SESSION['error'] = "Vous devez être connecté(e) pour accéder à cette page";
-            header('Location: ' . PATH . 'users/login');
-            exit;
         }
 
     }
@@ -258,13 +263,16 @@ class AdminController extends Controller
     //Contact
     public function contacts()
     {
-        $contact = new ContactModel;
-
-        $contacts = $contact->findAll();
-
-        $this->render('admin/contacts/contacts', [
-            'contacts' => $contacts
-        ], 'admin');
+        if($this->isAdmin()) 
+        {
+            $contact = new ContactModel;
+    
+            $contacts = $contact->findAll();
+    
+            $this->render('admin/contacts/contacts', [
+                'contacts' => $contacts
+            ], 'admin');
+        }
     }
 
     public function deleteContact(int $id)
@@ -285,13 +293,16 @@ class AdminController extends Controller
 
     public function comments()
     {
-        $commentModel = new CommentModel;
-
-        $comments = $commentModel->findBy(['active' => 0]);
-
-        $this->render('admin/comments/index', [
-            'comments' => $comments
-        ], 'admin');
+        if($this->isAdmin())
+        {
+            $commentModel = new CommentModel;
+    
+            $comments = $commentModel->findBy(['active' => 0]);
+    
+            $this->render('admin/comments/index', [
+                'comments' => $comments
+            ], 'admin');
+        }
 
     }
 
